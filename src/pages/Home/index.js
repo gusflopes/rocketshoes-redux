@@ -1,111 +1,49 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { MdAddShoppingCart } from 'react-icons/md';
+import { formatPrice } from '../../util/format';
+import api from '../../services/api';
 
 import { ProductList } from './styles';
 
-export default function Home() {
-  return (
-    <ProductList>
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-mizuno-jet-3-n-masculino/75/D16-2255-375/D16-2255-375_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis Mizuno</strong>
-        <span>R$ 129,00</span>
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
+class Home extends Component {
+  state = {
+    products: [],
+  };
 
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
+  async componentDidMount() {
+    const response = await api.get('products');
 
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-mizuno-jet-3-n-masculino/75/D16-2255-375/D16-2255-375_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis Mizuno</strong>
-        <span>R$ 129,00</span>
+    const data = response.data.map(product => ({
+      ...product,
+      priceFormatted: formatPrice(product.price),
+    }));
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" />
-          </div>
+    this.setState({ products: data });
+  }
 
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
+  render() {
+    const { products } = this.state;
 
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-mizuno-jet-3-n-masculino/75/D16-2255-375/D16-2255-375_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis Mizuno</strong>
-        <span>R$ 129,00</span>
+    return (
+      <ProductList>
+        {products.map(product => (
+          <li key={product.id}>
+            <img src={product.image} alt={product.title} />
+            <strong>{product.title}</strong>
+            <span>{product.priceFormatted}</span>
+            <button type="button">
+              <div>
+                <MdAddShoppingCart size={16} color="#fff" /> 3
+              </div>
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" />
-          </div>
-
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-mizuno-jet-3-n-masculino/75/D16-2255-375/D16-2255-375_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis Mizuno</strong>
-        <span>R$ 129,00</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" />
-          </div>
-
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-mizuno-jet-3-n-masculino/75/D16-2255-375/D16-2255-375_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis Mizuno</strong>
-        <span>R$ 129,00</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" />
-          </div>
-
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-mizuno-jet-3-n-masculino/75/D16-2255-375/D16-2255-375_detalhe2.jpg?ims=326x"
-          alt="Tênis"
-        />
-        <strong>Tênis Mizuno</strong>
-        <span>R$ 129,00</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" />
-          </div>
-
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-    </ProductList>
-  );
+              <span>ADICIONAR AO CARRINHO</span>
+            </button>
+          </li>
+        ))}
+      </ProductList>
+    );
+  }
 }
+
+export default connect()(Home);
