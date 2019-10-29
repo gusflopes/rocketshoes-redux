@@ -29,6 +29,9 @@ class Home extends Component {
     const { addToCartRequest } = this.props;
 
     addToCartRequest(id);
+
+    // navegação aqui não vai funcionar pq o JavaScript não vai esperar o Saga.
+    // this.props.history.push('/cart');
   };
 
   render() {
